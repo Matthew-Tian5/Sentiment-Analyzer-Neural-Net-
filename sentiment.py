@@ -44,3 +44,27 @@ print(f"Index of 'terrible': {word_to_idx.get('terrible', 'not found')}")
 
 
 
+MAX_LEN = 200
+
+def encode(text):
+
+    #toeknize and trim to 200 words, word 
+    tokens = tokenize(text)[:MAX_LEN]
+
+    #IMPORTANT
+    #cinvert tokens to indices, use 1 for unknown words and pad with 0s if less than 200
+    ids = [word_to_idx.get(t,1) for t in tokens]
+    padded = ids +[0] * (MAX_LEN - len(ids))
+    return padded
+
+X_train = torch.tensor([encode(ex['text']) for ex in train_data], dtype = torch.long)
+y_train = torch.tensor([ex['label'] for ex in train_data], dtype = torch.float)
+
+X_test = torch.tensor([encode(ex['text']) for ex in test_data], dtype = torch.long)
+y_test = torch.tensor([ex['label'] for ex in test_data], dtype = torch.float)
+
+
+print(f"X_train shape: {X_train.shape}")  # should be [25000, 200]
+print(f"y_train shape: {y_train.shape}")  # should be [25000]
+print(f"\nFirst review encoded: {X_train[0][:20]}")  # first 20 numbers
+print(f"First review label: {y_train[0]}")  # 0 = negative, 1 = positive
