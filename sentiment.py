@@ -68,3 +68,54 @@ print(f"X_train shape: {X_train.shape}")  # should be [25000, 200]
 print(f"y_train shape: {y_train.shape}")  # should be [25000]
 print(f"\nFirst review encoded: {X_train[0][:20]}")  # first 20 numbers
 print(f"First review label: {y_train[0]}")  # 0 = negative, 1 = positive
+
+
+from torch.utils.data import TensorDataset, DataLoader
+
+BATCH_SIZE = 64
+
+train_dataset = TensorDataset(X_train, y_train)
+test_dataset = TensorDataset(X_test, y_test)
+
+
+
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle = True)
+test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE)
+
+
+class SentimentNet(nn.Module):
+    def __init__(self,vocab_size, embed_dim, hidden_dim):
+        super().__init__()
+
+        #converts each word Id into a 64 number vector that captures meaining
+        self.embedding = nn.Embedding(vocab_size, embed_dim, padding_idx=0
+                                      )
+        #fully connceted layers that learn patterns from those vectors
+        self.fcl = nn.Linear(embed_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, 1)
+
+        #activation functino that lets the network learn non linear patterns
+        self.relu = nn.ReLU()
+
+        #randomly turns off 30% of neurons during trainingg to prevent memorization
+        self.dropout = nn.Dropout(0.3)
+        
+        #sigmoid squiahes the final outpit to between 0 and 1, which we can interpret as probability of being positive
+        self.sigmoid = nn.Sigmoid()
+
+
+    def forward(self, x):
+        embedded = self.embedding(x)
+        pooled = embedded.mean(dim=1)
+        out = self.fcl(pooled)
+        out = self.relu(out)
+        out = self.dropout(out)
+        out = self.fc2(out)
+        return self.sigmoid(out).squeeze()
+    
+
+
+#Create model
+model = SentimentNet(vocab_size=10000, embed_dim=64, hidden_dim=128).to(device)
+print(model)
+print(f"\nTotal parameters: {sum(p.numel() for p in model.parameters()):,}")
