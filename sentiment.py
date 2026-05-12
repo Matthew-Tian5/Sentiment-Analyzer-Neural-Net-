@@ -119,3 +119,60 @@ class SentimentNet(nn.Module):
 model = SentimentNet(vocab_size=10000, embed_dim=64, hidden_dim=128).to(device)
 print(model)
 print(f"\nTotal parameters: {sum(p.numel() for p in model.parameters()):,}")
+
+
+
+
+#Traning
+
+EPOCHS = 5
+LEARNING_RATE = 0.001
+
+
+#Binary Cross Entropy for yes no problems
+criterion = nn.BCELoss()
+
+optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
+
+def train_epoch(model, loader):
+    model.train()
+    total_loss, correct = 0, 0
+    for X_batch, y_batch in loader:
+        X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+        
+        #clears old gradientsch.to(device)
+        optimizer.zero_grad()
+        #foward pass reviews go through the network model and amkes predictions
+        predictions = model(X_batch)
+        #measure error
+        loss = criterion(predictions, y_batch)
+        #backward propagation calculates how mcuh each weight contributed to the error
+        loss.backward()
+        #update weights - nudeges every weight slightly in the direction that reduces error
+        optimizer.step()
+        total_loss += loss.item()
+        correct += ((predictions > 0.5) == y_batch).sum().item()
+    return total_loss / len(loader), correct / len(loader.dataset)
+
+
+
+
+def evaluate(model, loader):
+    model.eval()
+    total_loss, correct = 0, 0
+    with torch.no_grad():
+        for X_batch, y_batch in loader:
+            X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+            predictions = model(X_batch)
+            loss = criterion(predictions, y_batch)
+            total_loss += loss.item()
+            correct += ((predictions > 0.5) == y_batch).sum().item()
+    return total_loss / len(loader), correct / len(loader.dataset)
+
+print("Starting training...\n")
+for epoch in range(EPOCHS):
+    train_loss, train_acc = train_epoch(model, train_loader)
+    test_loss, test_acc = evaluate(model, test_loader)
+    print(f"Epoch {epoch+1}/{EPOCHS} | "
+          f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | "
+          f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
