@@ -4,7 +4,7 @@ A neural network built from scratch in PyTorch that reads movie reviews and clas
 
 ---
 
-## 📋 Project Overview
+## Project Overview
 
 This project takes raw text as input, processes it through an embedding-based neural network, and outputs a sentiment prediction with a confidence score.
 
@@ -15,7 +15,7 @@ This project takes raw text as input, processes it through an embedding-based ne
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
 Text can't be fed directly into a neural network — computers only understand numbers. The model processes text through this pipeline:
 
@@ -30,14 +30,14 @@ Embedding        → [[0.2, 0.8, ...], ...]  (each ID → 64-number meaning vect
    ↓
 Mean Pooling     → average all word vectors into one review vector
    ↓
-Neural Network   → 0.96  →  POSITIVE ✅
+Neural Network   → 0.96  →  POSITIVE
 ```
 
 The **embedding layer** is the key insight — words with similar meanings (like "great" and "amazing") end up with similar vectors, which is how the model understands language.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ![Neural Network Architecture](architecture.png)
 
@@ -54,7 +54,7 @@ The **embedding layer** is the key insight — words with similar meanings (like
 
 ---
 
-## 📊 Training Results
+## Training Results
 
 Trained for 5 epochs on 25,000 IMDB reviews with a batch size of 64.
 
@@ -72,7 +72,7 @@ Trained for 5 epochs on 25,000 IMDB reviews with a batch size of 64.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Sentiment-Analyzer/
@@ -82,7 +82,7 @@ Sentiment-Analyzer/
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ```bash
 # Create a virtual environment
@@ -98,7 +98,7 @@ python3 sentiment.py
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Python 3.12**
 - **PyTorch** — neural network definition and training
@@ -108,7 +108,7 @@ python3 sentiment.py
 
 ---
 
-## 🧪 Example Predictions
+## Example Predictions
 
 ```
 Review: This movie was absolutely incredible. The acting was superb...
@@ -123,7 +123,7 @@ Result: (near 50% — ambiguous, as expected)
 
 ---
 
-## 🧠 Concepts Covered
+## Concepts Covered
 
 - Text tokenization and vocabulary building
 - Word embeddings
@@ -135,7 +135,7 @@ Result: (near 50% — ambiguous, as expected)
 
 ---
 
-## 🔮 Next Steps
+## Next Steps
 
 - **LSTM / GRU** — recurrent layers that process word order, not just averages
 - **Pre-trained embeddings** — use GloVe or Word2Vec instead of training from scratch
