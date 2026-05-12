@@ -1,4 +1,4 @@
-# 🎬 Sentiment Analyzer — Neural Network
+# Sentiment Analyzer — Neural Network
 
 A neural network built from scratch in PyTorch that reads movie reviews and classifies them as **positive** or **negative**. Trained on 25,000 real IMDB reviews, achieving **85.08% accuracy** on unseen data.
 
