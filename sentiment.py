@@ -176,3 +176,19 @@ for epoch in range(EPOCHS):
     print(f"Epoch {epoch+1}/{EPOCHS} | "
           f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | "
           f"Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.4f}")
+    
+
+def predict(text):
+    model.eval()
+    encoded = torch.tensor([encode(text)], dtype=torch.long).to(device)
+    with torch.no_grad():
+        prob = model(encoded).item()
+    label = "POSITIVE 😊" if prob > 0.5 else "NEGATIVE 😞"
+    print(f"Review: {text[:80]}...")
+    print(f"Result: {label} (confidence: {prob:.2%})\n")
+
+
+predict("This movie was absolutely incredible. The acting was superb and I loved every minute.")
+predict("What a waste of time. The plot made no sense and the acting was terrible.")
+predict("It was okay I guess, nothing special but not horrible either.")
+predict("One of the best films I have ever seen in my entire life. A true masterpiece.")
